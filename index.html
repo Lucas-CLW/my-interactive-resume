@@ -70,6 +70,7 @@
             border-radius: 9999px;
             font-weight: 600;
             transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+            cursor: pointer;
         }
 
         .filter-button:hover {
@@ -123,6 +124,25 @@
             height: 100%;
             border-radius: inherit;
             transition: width 0.5s ease, background-color 0.3s ease;
+        }
+
+        .value-flash {
+            animation: valueFlash 0.6s ease;
+        }
+
+        @keyframes valueFlash {
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            45% {
+                transform: scale(1.06);
+                filter: brightness(1.18);
+            }
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
         }
 
         /* 針對 Chart.js 容器的響應式設定 */
@@ -264,16 +284,25 @@
                 </p>
                 <div class="flex flex-col sm:flex-row sm:flex-wrap gap-3 sm:gap-4">
                     <div class="flex gap-3 overflow-x-auto sm:overflow-visible pb-2 sm:pb-0">
-                        <button id="filter-peak" class="filter-button whitespace-nowrap px-5 py-2 text-sm md:text-base active-filter" data-scenario="peak">
+                        <button id="filter-peak" type="button" class="filter-button whitespace-nowrap px-5 py-2 text-sm md:text-base active-filter" data-scenario="peak" aria-pressed="true">
                             🛵 營運優化後 (實際高績效)
                         </button>
-                        <button id="filter-base" class="filter-button whitespace-nowrap px-5 py-2 text-sm md:text-base" data-scenario="base">
+                        <button id="filter-base" type="button" class="filter-button whitespace-nowrap px-5 py-2 text-sm md:text-base" data-scenario="base" aria-pressed="false">
                             📉 優化前 (基礎數據)
                         </button>
-                        <button id="filter-proj" class="filter-button whitespace-nowrap px-5 py-2 text-sm md:text-base" data-scenario="proj">
+                        <button id="filter-proj" type="button" class="filter-button whitespace-nowrap px-5 py-2 text-sm md:text-base" data-scenario="proj" aria-pressed="false">
                             📈 新專案預期 (高數據分析需求)
                         </button>
                     </div>
+                </div>
+                <div id="scenario-summary" class="mt-6 rounded-2xl border border-slate-200 bg-slate-50/80 p-5 text-slate-700 shadow-sm">
+                    <div class="flex items-center gap-3">
+                        <span id="scenario-indicator" class="h-2.5 w-2.5 rounded-full bg-cyan-500"></span>
+                        <p id="scenario-title" class="text-sm font-semibold tracking-wide text-slate-800">營運優化後（實際高績效）</p>
+                    </div>
+                    <p id="scenario-text" class="mt-3 text-sm leading-relaxed">
+                        重現 YouBike 成功的調度模式，凸顯 33% 用戶增長、95%+ 滿意度與 15% 工時縮減的整體成效。
+                    </p>
                 </div>
             </section>
 
@@ -319,8 +348,8 @@
 
                 <!-- 手機版 Tabs 導航 -->
                 <div id="mobile-tabs" class="md:hidden mt-8 flex justify-around rounded-2xl border border-slate-200 bg-slate-50 p-2 shadow-inner">
-                    <button id="tab-yuzhi" class="mobile-tab-btn w-1/2 rounded-xl px-4 py-3 text-sm text-slate-600 active" data-job="yuzhi">輿智科技</button>
-                    <button id="tab-youbike" class="mobile-tab-btn w-1/2 rounded-xl px-4 py-3 text-sm text-slate-600" data-job="youbike">微笑單車</button>
+                    <button id="tab-yuzhi" type="button" class="mobile-tab-btn w-1/2 rounded-xl px-4 py-3 text-sm text-slate-600 active" data-job="yuzhi">輿智科技</button>
+                    <button id="tab-youbike" type="button" class="mobile-tab-btn w-1/2 rounded-xl px-4 py-3 text-sm text-slate-600" data-job="youbike">微笑單車</button>
                 </div>
 
                 <div class="mt-10 md:flex md:space-x-12">
@@ -328,11 +357,11 @@
                     <div class="hidden md:block md:w-1/3 mb-8 md:mb-0">
                         <div class="relative pl-8">
                             <div class="timeline-line"></div>
-                            <button id="btn-yuzhi" class="relative w-full text-left mb-4 timeline-item transition-all duration-300" data-job="yuzhi">
+                            <button id="btn-yuzhi" type="button" class="relative w-full text-left mb-4 timeline-item transition-all duration-300" data-job="yuzhi">
                                 <p class="font-bold text-lg">輿智科技</p>
                                 <p class="text-sm text-slate-500">專員 | 2015 - 2025</p>
                             </button>
-                            <button id="btn-youbike" class="relative w-full text-left timeline-item transition-all duration-300" data-job="youbike">
+                            <button id="btn-youbike" type="button" class="relative w-full text-left timeline-item transition-all duration-300" data-job="youbike">
                                 <p class="font-bold text-lg">微笑單車 (YouBike)</p>
                                 <p class="text-sm text-slate-500">營運企劃高級專員 | 2013 - 2015</p>
                             </button>
@@ -450,11 +479,11 @@
 
     <script>
         // 1. 數據儲存：包含成就數據和技能數據
-        const kpiData = {
-            peak: { // 營運優化後 (實際高績效)
-                users: '33%',
-                satisfaction: '95%+',
-                hours: '15%',
+        const kpiData = {␊
+            peak: { // 營運優化後 (實際高績效)␊
+                users: '33%',␊
+                satisfaction: '95%+',␊
+                hours: '15%',␊
                 usersColor: '#4A90E2',
                 satisfactionColor: 'rgb(34, 197, 94)',
                 hoursColor: 'rgb(249, 115, 22)',
@@ -529,6 +558,21 @@
             }
         };
 
+        const scenarioDescriptions = {
+            peak: {
+                title: '營運優化後（實際高績效）',
+                text: '重現 YouBike 成功的調度模式，凸顯 33% 用戶增長、95%+ 滿意度與 15% 工時縮減的整體成效。'
+            },
+            base: {
+                title: '優化前（基礎數據）',
+                text: '展示調整前的挑戰：僅 8% 的用戶成長、80% 滿意度與 2% 的工時改善，凸顯改革必要性。'
+            },
+            proj: {
+                title: '新專案預期（高數據分析需求）',
+                text: '模擬新案導入時的策略布局，預期 45% 用戶成長、98% 滿意度與 20% 工時縮減的潛在成果。'
+            }
+        };
+
         const skillLabels = ['數據分析 (Excel, R)', '專案管理', '營運規劃', 'Google Studio', '流程改善 (SOP)'];
         const skillFillColors = [
             'rgba(74, 144, 226, 0.7)',
@@ -555,6 +599,18 @@
             const btnsFilter = document.querySelectorAll('#data-filter button');
             const fallbackContainer = document.getElementById('skills-fallback');
             const chartWrapper = document.getElementById('skills-chart-wrapper');
+            const scenarioTitle = document.getElementById('scenario-title');
+            const scenarioText = document.getElementById('scenario-text');
+            const scenarioIndicator = document.getElementById('scenario-indicator');
+            const scenarioSummaryCard = document.getElementById('scenario-summary');
+
+            function triggerValueFlash(element) {
+                if (!element) return;
+                element.classList.remove('value-flash');
+                // 觸發重繪以重新套用動畫
+                void element.offsetWidth;
+                element.classList.add('value-flash');
+            }
 
             // --- 2. 互動式職涯時間軸/手機 Tabs 邏輯 ---
             function updateJobDetails(jobKey) {
@@ -583,6 +639,7 @@
                     }
                 });
                 currentJob = jobKey;
+                triggerValueFlash(detailsContainer);
             }
 
             btnsTimeLine.forEach(btn => btn.addEventListener('click', (e) => updateJobDetails(e.currentTarget.dataset.job)));
@@ -602,9 +659,11 @@
                     if (fill) {
                         fill.style.width = `${value}%`;
                         fill.style.backgroundColor = skillBorderColors[index] || '#0ea5e9';
+                        triggerValueFlash(fill);
                     }
                     if (valueEl) {
                         valueEl.textContent = `${value}%`;
+                        triggerValueFlash(valueEl);
                     }
                 });
             }
@@ -683,18 +742,26 @@
             // --- 4. 數據篩選器邏輯 (動態變動數據) ---
             function updateData(scenario) {
                 const data = kpiData[scenario];
+                const summary = scenarioDescriptions[scenario];
 
                 // 更新 KPI 數字和顏色
-                document.getElementById('data-users').textContent = data.users;␊
-                document.getElementById('data-users').style.color = data.usersColor;
+                const usersEl = document.getElementById('data-users');
+                const satisfactionEl = document.getElementById('data-satisfaction');
+                const hoursEl = document.getElementById('data-hours');
+
+                usersEl.textContent = data.users;
+                usersEl.style.color = data.usersColor;
+                triggerValueFlash(usersEl);
                 document.querySelector('#kpi-users [data-accent="line"]').style.backgroundColor = data.usersColor;
-␊
-                document.getElementById('data-satisfaction').textContent = data.satisfaction;␊
-                document.getElementById('data-satisfaction').style.color = data.satisfactionColor;
+
+                satisfactionEl.textContent = data.satisfaction;
+                satisfactionEl.style.color = data.satisfactionColor;
+                triggerValueFlash(satisfactionEl);
                 document.querySelector('#kpi-satisfaction [data-accent="line"]').style.backgroundColor = data.satisfactionColor;
-␊
-                document.getElementById('data-hours').textContent = data.hours;␊
-                document.getElementById('data-hours').style.color = data.hoursColor;
+
+                hoursEl.textContent = data.hours;
+                hoursEl.style.color = data.hoursColor;
+                triggerValueFlash(hoursEl);
                 document.querySelector('#kpi-hours [data-accent="line"]').style.backgroundColor = data.hoursColor;
 
                 // 更新圖表數據
@@ -704,12 +771,23 @@
                 }
                 syncFallbackSkills(data.skills);
 
+                if (summary) {
+                    if (scenarioTitle) scenarioTitle.textContent = summary.title;
+                    if (scenarioText) scenarioText.textContent = summary.text;
+                }
+                if (scenarioIndicator) {
+                    scenarioIndicator.style.backgroundColor = data.usersColor;
+                }
+                triggerValueFlash(scenarioSummaryCard);
+
                 // 更新按鈕樣式
                 btnsFilter.forEach(btn => {
                     if (btn.dataset.scenario === scenario) {
                         btn.classList.add('active-filter');
+                        btn.setAttribute('aria-pressed', 'true');
                     } else {
                         btn.classList.remove('active-filter');
+                        btn.setAttribute('aria-pressed', 'false');
                     }
                 });
             }
