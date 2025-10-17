@@ -111,6 +111,20 @@
             transition: color 0.3s, border-color 0.3s, background-color 0.3s;
         }
 
+        .skill-bar {
+            position: relative;
+            height: 0.75rem;
+            border-radius: 9999px;
+            background-color: rgba(148, 163, 184, 0.35);
+            overflow: hidden;
+        }
+
+        .skill-bar-fill {
+            height: 100%;
+            border-radius: inherit;
+            transition: width 0.5s ease, background-color 0.3s ease;
+        }
+
         /* 針對 Chart.js 容器的響應式設定 */
         .chart-container {
             position: relative;
@@ -327,7 +341,25 @@
 
                     <!-- 詳細內容區塊 -->
                     <div id="job-details" class="md:w-2/3 rounded-3xl border border-slate-100 bg-white p-6 sm:p-8 shadow-lg">
-                        <!-- 內容由JS動態載入 -->
+                        <h3 class="text-2xl font-bold text-slate-900 mb-1">輿智科技</h3>
+                        <p class="text-md font-semibold text-cyan-600 mb-4">專員 | 2015 年 7 月 - 2025 年 8 月</p>
+                        <div class="space-y-4">
+                            <div>
+                                <h4 class="font-semibold text-lg text-slate-800">交通專案執行與分析</h4>
+                                <ul class="list-disc list-inside mt-2 text-slate-600 space-y-1">
+                                    <li><b>專案參與：</b>參與多項大型政府交通採購標案，負責車流量調查、旅行時間與旅次分析。</li>
+                                    <li><b>專業分析：</b>進行交通號誌優化與交通衝擊評估，為政府單位提供數據支持與解決方案。</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-lg text-slate-800">主要參與專案 (部分)</h4>
+                                <ul class="list-disc list-inside mt-2 text-slate-600 space-y-1">
+                                    <li>台南市公車優先號誌（綠、紅、藍幹線）</li>
+                                    <li>嘉義縣幹道時制重整及設備維運計畫</li>
+                                    <li>基隆市市區汽車客運業營運及服務評鑑</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -341,10 +373,57 @@
                     </p>
                 </div>
                 <div class="mt-10 rounded-3xl border border-slate-100 bg-white p-6 sm:p-8 shadow-lg">
-                    <div class="chart-container">
+                    <div class="chart-container" id="skills-chart-wrapper" style="display:none;">
                         <canvas id="skillsChart"></canvas>
                     </div>
-                </div>␊
+                    <div id="skills-fallback" class="mt-6 space-y-5">
+                        <div class="space-y-2" data-skill-index="0">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-slate-800">數據分析 (Excel, R)</p>
+                                <span class="text-sm text-slate-500" data-skill-value>95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" style="width:95%; background-color: rgba(74, 144, 226, 1);"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2" data-skill-index="1">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-slate-800">專案管理</p>
+                                <span class="text-sm text-slate-500" data-skill-value>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" style="width:90%; background-color: rgba(34, 197, 94, 1);"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2" data-skill-index="2">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-slate-800">營運規劃</p>
+                                <span class="text-sm text-slate-500" data-skill-value>90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" style="width:90%; background-color: rgba(249, 115, 22, 1);"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2" data-skill-index="3">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-slate-800">Google Studio</p>
+                                <span class="text-sm text-slate-500" data-skill-value>85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" style="width:85%; background-color: rgba(234, 179, 8, 1);"></div>
+                            </div>
+                        </div>
+                        <div class="space-y-2" data-skill-index="4">
+                            <div class="flex items-center justify-between">
+                                <p class="font-semibold text-slate-800">流程改善 (SOP)</p>
+                                <span class="text-sm text-slate-500" data-skill-value>88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-bar-fill" style="width:88%; background-color: rgba(139, 92, 246, 1);"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
             </div>
         </main>
@@ -401,11 +480,11 @@
             }
         };
 
-        const jobData = {
-            youbike: {
-                title: '微笑單車 (YouBike)',
-                position: '營運企劃高級專員 | 2013 年 4 月 - 2015 年 7 月',
-                content: `
+        const jobData = {␊
+            youbike: {␊
+                title: '微笑單車 (YouBike)',␊
+                position: '營運企劃高級專員 | 2013 年 4 月 - 2015 年 7 月',␊
+                content: `␊
                     <div class="space-y-4">
                         <div>
                             <h4 class="font-semibold text-lg text-slate-800">營運優化與績效管理</h4>
@@ -450,6 +529,22 @@
             }
         };
 
+        const skillLabels = ['數據分析 (Excel, R)', '專案管理', '營運規劃', 'Google Studio', '流程改善 (SOP)'];
+        const skillFillColors = [
+            'rgba(74, 144, 226, 0.7)',
+            'rgba(34, 197, 94, 0.7)',
+            'rgba(249, 115, 22, 0.7)',
+            'rgba(234, 179, 8, 0.7)',
+            'rgba(139, 92, 246, 0.7)'
+        ];
+        const skillBorderColors = [
+            'rgba(74, 144, 226, 1)',
+            'rgba(34, 197, 94, 1)',
+            'rgba(249, 115, 22, 1)',
+            'rgba(234, 179, 8, 1)',
+            'rgba(139, 92, 246, 1)'
+        ];
+
         let skillsChart;
         let currentJob = 'yuzhi';
 
@@ -458,24 +553,26 @@
             const btnsMobileTabs = document.querySelectorAll('.mobile-tab-btn');
             const detailsContainer = document.getElementById('job-details');
             const btnsFilter = document.querySelectorAll('#data-filter button');
+            const fallbackContainer = document.getElementById('skills-fallback');
+            const chartWrapper = document.getElementById('skills-chart-wrapper');
 
             // --- 2. 互動式職涯時間軸/手機 Tabs 邏輯 ---
             function updateJobDetails(jobKey) {
                 const data = jobData[jobKey];
-                detailsContainer.innerHTML = `␊
+                detailsContainer.innerHTML = `
                     <h3 class="text-2xl font-bold text-slate-900 mb-1">${data.title}</h3>
                     <p class="text-md font-semibold text-cyan-600 mb-4">${data.position}</p>
-                    ${data.content}␊
-                `;␊
+                    ${data.content}
+                `;
 
-                // 更新桌面時間軸樣式␊
-                btnsTimeLine.forEach(btn => {␊
-                    if (btn.dataset.job === jobKey) {␊
+                // 更新桌面時間軸樣式
+                btnsTimeLine.forEach(btn => {
+                    if (btn.dataset.job === jobKey) {
                         btn.classList.add('active');
-                    } else {␊
+                    } else {
                         btn.classList.remove('active');
-                    }␊
-                });␊
+                    }
+                });
 
                 // 更新手機 Tabs 樣式
                 btnsMobileTabs.forEach(btn => {
@@ -495,32 +592,93 @@
             updateJobDetails('yuzhi');
 
 
+            function syncFallbackSkills(values) {
+                if (!fallbackContainer) return;
+                values.forEach((value, index) => {
+                    const item = fallbackContainer.querySelector(`[data-skill-index="${index}"]`);
+                    if (!item) return;
+                    const fill = item.querySelector('.skill-bar-fill');
+                    const valueEl = item.querySelector('[data-skill-value]');
+                    if (fill) {
+                        fill.style.width = `${value}%`;
+                        fill.style.backgroundColor = skillBorderColors[index] || '#0ea5e9';
+                    }
+                    if (valueEl) {
+                        valueEl.textContent = `${value}%`;
+                    }
+                });
+            }
+
+            syncFallbackSkills(kpiData.peak.skills);
+
             // --- 3. 技能圖表初始化 ---
-            const ctx = document.getElementById('skillsChart').getContext('2d');
-            skillsChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: ['數據分析 (Excel, R)', '專案管理', '營運規劃', 'Google Studio', '流程改善 (SOP)'],
-@@ -376,67 +549,63 @@
-                                    return value + '%'
+            const chartCanvas = document.getElementById('skillsChart');
+            if (typeof Chart !== 'undefined' && chartCanvas) {
+                const ctx = chartCanvas.getContext('2d');
+                skillsChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: skillLabels,
+                        datasets: [{
+                            label: '技能熟練度',
+                            data: kpiData.peak.skills,
+                            backgroundColor: skillFillColors,
+                            borderColor: skillBorderColors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            duration: 700 // 新增動畫，數據變動時更流暢
+                        },
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return ` 熟練度: ${context.raw}%`;
+                                    }
                                 }
                             }
                         },
-                        y: {
-                            ticks: {
-                                autoSkip: false,
-                                callback: function(value) {
-                                    const label = this.getLabelForValue(value);
-                                    if (label.length > 16) {
-                                        return label.substring(0, 16) + '...';
+                        scales: {
+                            x: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value + '%'
                                     }
-                                    return label;
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    autoSkip: false,
+                                    callback: function(value) {
+                                        const label = this.getLabelForValue(value);
+                                        if (label.length > 16) {
+                                            return label.substring(0, 16) + '...';
+                                        }
+                                        return label;
+                                    }
                                 }
                             }
                         }
                     }
+                });
+
+                if (chartWrapper) {
+                    chartWrapper.style.display = 'block';
                 }
-            });
+                if (fallbackContainer) {
+                    fallbackContainer.style.display = 'none';
+                }
+            }
 
             // --- 4. 數據篩選器邏輯 (動態變動數據) ---
             function updateData(scenario) {
@@ -540,8 +698,11 @@
                 document.querySelector('#kpi-hours [data-accent="line"]').style.backgroundColor = data.hoursColor;
 
                 // 更新圖表數據
-                skillsChart.data.datasets[0].data = data.skills;
-                skillsChart.update();
+                if (skillsChart) {
+                    skillsChart.data.datasets[0].data = data.skills;
+                    skillsChart.update();
+                }
+                syncFallbackSkills(data.skills);
 
                 // 更新按鈕樣式
                 btnsFilter.forEach(btn => {
