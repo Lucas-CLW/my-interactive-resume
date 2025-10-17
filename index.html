@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>何文碩 | 交通運輸與營運分析專家</title>
+    <!-- 載入 Tailwind CSS 和 Chart.js -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- 載入 Noto Sans TC 字體 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #F8F7F4;
+            color: #333333;
+        }
+        /* 針對 Chart.js 容器的響應式設定 */
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* 桌面版最大寬度 */
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px; /* 基礎高度 */
+            max-height: 350px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        /* 垂直時間軸樣式 (僅限桌面顯示) */
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #A0AEC0;
+            border: 4px solid #F8F7F4;
+            transition: background-color 0.3s;
+        }
+        .timeline-item.active::before {
+            background-color: #4A90E2;
+        }
+        .timeline-line {
+            position: absolute;
+            left: -21px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #E2E8F0;
+        }
+        /* 手機版導航按鈕樣式 */
+        .mobile-tab-btn.active {
+            border-bottom: 2px solid #4A90E2;
+            color: #4A90E2;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <div class="container mx-auto p-4 md:p-8 max-w-6xl">
+
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-800">何文碩</h1>
+            <p class="text-xl md:text-2xl text-[#4A90E2] mt-2 font-semibold">交通運輸與營運分析專家</p>
+            <!-- 聯繫方式 - 確保RWD顯示 -->
+            <div class="flex flex-wrap justify-center items-center space-x-0 md:space-x-4 mt-2 text-gray-600 text-sm md:text-base">
+                <p class="mx-2 my-1">📞 +886 919 988538</p>
+                <p class="mx-2 my-1">📧 hippop3c@gmail.com</p>
+                <p class="mx-2 my-1">🏠 204 基隆市安樂路一段 208 號五樓</p>
+            </div>
+            <p class="mt-4 max-w-3xl mx-auto text-gray-600">
+                超過八年的交通運輸與營運企劃經驗，擅長運用數據分析優化營運效能、提升顧客滿意度，並精通專案管理與跨部門協調。在 YouBike 任職期間，成功將用戶數提升 33%、顧客滿意度維持 95% 以上，並將人均工時降低 15%。渴望將我的數據分析與專案管理能力應用於新領域，為貴公司帶來更大的價值。
+            </p>
+        </header>
+
+        <main>
+            <!-- 數據情境篩選器 -->
+            <section id="data-filter" class="mb-12 bg-white p-6 rounded-lg shadow-md border-l-4 border-gray-300">
+                <h2 class="text-xl font-bold text-gray-700 mb-4">數據情境篩選器</h2>
+                <p class="text-gray-600 mb-4 text-sm md:text-base">模擬不同情境下，我的專業成果與技能應用狀況，請選擇一個情境來觀察下方數據的變化：</p>
+                <div class="flex flex-wrap justify-center md:justify-start gap-4">
+                    <button id="filter-peak" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 text-sm md:text-base active-filter" data-scenario="peak">
+                        🛵 營運優化後 (實際高績效)
+                    </button>
+                    <button id="filter-base" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 text-sm md:text-base" data-scenario="base">
+                        📉 優化前 (基礎數據)
+                    </button>
+                    <button id="filter-proj" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 text-sm md:text-base" data-scenario="proj">
+                        📈 新專案預期 (高數據分析需求)
+                    </button>
+                </div>
+            </section>
+
+            <!-- 關鍵成就儀表板 -->
+            <section id="key-achievements" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-700">關鍵成就儀表板</h2>
+                <div class="intro-text max-w-3xl mx-auto text-center text-gray-600 mb-8">
+                    <p>此儀表板數據將根據上方「數據情境篩選器」動態變化，反映我在不同營運情境下的核心貢獻與影響力。</p>
+                </div>
+                <!-- RWD Grid for KPIs -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 text-center">
+                    <div class="bg-white p-6 rounded-lg shadow-md border-b-4 border-[#4A90E2] transition-all duration-500" id="kpi-users">
+                        <div class="text-4xl md:text-5xl font-bold text-[#4A90E2]" id="data-users">33%</div>
+                        <p class="mt-2 text-gray-600 font-semibold">用戶人數增長</p>
+                        <p class="text-sm text-gray-500 mt-1">透過數據驅動的車輛配置優化</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-b-4 border-green-500 transition-all duration-500" id="kpi-satisfaction">
+                        <div class="text-4xl md:text-5xl font-bold text-green-500" id="data-satisfaction">95%+</div>
+                        <p class="mt-2 text-gray-600 font-semibold">顧客滿意度</p>
+                        <p class="text-sm text-gray-500 mt-1">經由建立科學化的選點指標模型</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md border-b-4 border-orange-500 transition-all duration-500" id="kpi-hours">
+                        <div class="text-4xl md:text-5xl font-bold text-orange-500" id="data-hours">15%</div>
+                        <p class="mt-2 text-gray-600 font-semibold">人均工時縮減</p>
+                        <p class="text-sm text-gray-500 mt-1">導入自動化系統與流程改善</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 職涯時間軸 -->
+            <section id="career-path" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-700">互動式職涯時間軸</h2>
+                 <div class="intro-text max-w-3xl mx-auto text-center text-gray-600 mb-8">
+                    <p>點擊下方或側邊的時間軸選項，即可查看我在不同公司的詳細職責、執行的專案以及具體貢獻，幫助您更深入地了解我的專業成長軌跡。</p>
+                </div>
+
+                <!-- 手機版 Tabs 導航 -->
+                <div id="mobile-tabs" class="md:hidden flex justify-around border-b border-gray-200 mb-6 bg-white rounded-t-lg shadow-sm">
+                    <button id="tab-yuzhi" class="mobile-tab-btn p-3 w-1/2 text-gray-600 active" data-job="yuzhi">輿智科技</button>
+                    <button id="tab-youbike" class="mobile-tab-btn p-3 w-1/2 text-gray-600" data-job="youbike">微笑單車</button>
+                </div>
+
+                <div class="md:flex md:space-x-12">
+                    <!-- 桌面版時間軸 (手機隱藏) -->
+                    <div class="hidden md:block md:w-1/3 mb-8 md:mb-0">
+                        <div class="relative pl-8">
+                            <div class="timeline-line"></div>
+                            <button id="btn-yuzhi" class="relative w-full text-left p-3 mb-4 timeline-item rounded-lg transition-all duration-300" data-job="yuzhi">
+                                <p class="font-bold text-lg">輿智科技</p>
+                                <p class="text-sm text-gray-500">專員 | 2015 - 2025</p>
+                            </button>
+                            <button id="btn-youbike" class="relative w-full text-left p-3 timeline-item rounded-lg transition-all duration-300" data-job="youbike">
+                                <p class="font-bold text-lg">微笑單車 (YouBike)</p>
+                                <p class="text-sm text-gray-500">營運企劃高級專員 | 2013 - 2015</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 詳細內容區塊 -->
+                    <div id="job-details" class="md:w-2/3 bg-white p-6 rounded-lg shadow-xl">
+                        <!-- 內容由JS動態載入 -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- 核心技能圖表 -->
+            <section id="skills-visualization" class="mb-16">
+                <h2 class="text-3xl font-bold text-center mb-8 text-gray-700">核心技能熟練度</h2>
+                <div class="intro-text max-w-3xl mx-auto text-center text-gray-600 mb-8">
+                    <p>下方圖表根據您選擇的情境動態更新，展示在不同專案中所需的技能熟練度。這反映了我的技能廣度與深度，能夠適應不同挑戰。</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 教育背景 -->
+        <footer class="text-center pt-8 border-t border-gray-200">
+            <h3 class="text-2xl font-bold text-gray-700 mb-4">教育背景</h3>
+            <!-- RWD 佈局：手機堆疊，桌面並排 -->
+            <div class="flex flex-col md:flex-row justify-center items-center md:space-x-8 space-y-4 md:space-y-0 text-gray-600">
+                <div class="text-center">
+                    <p class="font-semibold">淡江大學 | 運輸管理學系</p>
+                    <p class="text-sm text-gray-500">2012 年畢業</p>
+                </div>
+                <div class="text-center">
+                    <p class="font-semibold">真理大學 | 數學系</p>
+                    <p class="text-sm text-gray-500">2009 年畢業</p>
+                </div>
+            </div>
+            <p class="mt-6 text-xs text-gray-400">本互動式履歷由 Gemini 協助製作。</p>
+        </footer>
+
+    </div>
+
+    <script>
+        // 1. 數據儲存：包含成就數據和技能數據
+        const kpiData = {
+            peak: { // 營運優化後 (實際高績效)
+                users: '33%',
+                satisfaction: '95%+',
+                hours: '15%',
+                usersColor: '#4A90E2',
+                satisfactionColor: 'rgb(34, 197, 94)',
+                hoursColor: 'rgb(249, 115, 22)',
+                skills: [95, 90, 90, 85, 88] // 數據分析、專管、營運、GS、SOP
+            },
+            base: { // 優化前 (基礎數據) - 數據模擬較差狀態
+                users: '8%',
+                satisfaction: '80%',
+                hours: '2%',
+                usersColor: 'rgb(239, 68, 68)',
+                satisfactionColor: 'rgb(234, 179, 8)',
+                hoursColor: 'rgb(107, 114, 128)',
+                skills: [80, 85, 75, 70, 70] 
+            },
+            proj: { // 新專案預期 (高數據分析需求) - 數據模擬潛力
+                users: '45%',
+                satisfaction: '98%',
+                hours: '20%',
+                usersColor: 'rgb(249, 115, 22)',
+                satisfactionColor: 'rgb(74, 144, 226)',
+                hoursColor: 'rgb(34, 197, 94)',
+                skills: [98, 93, 80, 95, 90] // 數據分析、專管、營運、GS、SOP - 數據分析和GS更高
+            }
+        };
+
+        const jobData = {
+            youbike: {
+                title: '微笑單車 (YouBike)',
+                position: '營運企劃高級專員 | 2013 年 4 月 - 2015 年 7 月',
+                content: `
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-800">營運優化與績效管理</h4>
+                            <ul class="list-disc list-inside mt-2 text-gray-600 space-y-1">
+                                <li><b>策略規劃：</b>運用數據分析，建立預先車輛配置模型，有效減少無車可借還的狀況。</li>
+                                <li><b>成果：</b>成功使 YouBike 使用人數較同期成長 <b>33%</b>，並顯著增加營收。</li>
+                                <li><b>顧客滿意度：</b>建立選點指標模型，使顧客滿意度維持 <b>95% 以上</b>。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-800">專案管理與流程改善</h4>
+                            <ul class="list-disc list-inside mt-2 text-gray-600 space-y-1">
+                                <li><b>系統導入：</b>主導建立自動化與調度系統，成功將人均工時縮減 <b>15%</b>。</li>
+                                <li><b>專案負責人：</b>擔任 YouBike 2.0 專案與淨零調度專案的負責人。</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            },
+            yuzhi: {
+                title: '輿智科技',
+                position: '專員 | 2015 年 7 月 - 2025 年 8 月',
+                content: `
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-800">交通專案執行與分析</h4>
+                            <ul class="list-disc list-inside mt-2 text-gray-600 space-y-1">
+                                <li><b>專案參與：</b>參與多項大型政府交通採購標案，負責車流量調查、旅行時間與旅次分析。</li>
+                                <li><b>專業分析：</b>進行交通號誌優化與交通衝擊評估，為政府單位提供數據支持與解決方案。</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg text-gray-800">主要參與專案 (部分)</h4>
+                            <ul class="list-disc list-inside mt-2 text-gray-600 space-y-1">
+                                <li>台南市公車優先號誌（綠、紅、藍幹線）</li>
+                                <li>嘉義縣幹道時制重整及設備維運計畫</li>
+                                <li>基隆市市區汽車客運業營運及服務評鑑</li>
+                            </ul>
+                        </div>
+                    </div>
+                `
+            }
+        };
+
+        let skillsChart;
+        let currentJob = 'yuzhi';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnsTimeLine = document.querySelectorAll('#btn-yuzhi, #btn-youbike');
+            const btnsMobileTabs = document.querySelectorAll('.mobile-tab-btn');
+            const detailsContainer = document.getElementById('job-details');
+            const btnsFilter = document.querySelectorAll('#data-filter button');
+
+            // --- 2. 互動式職涯時間軸/手機 Tabs 邏輯 ---
+            function updateJobDetails(jobKey) {
+                const data = jobData[jobKey];
+                detailsContainer.innerHTML = `
+                    <h3 class="text-2xl font-bold text-gray-800 mb-1">${data.title}</h3>
+                    <p class="text-md text-[#4A90E2] font-semibold mb-4">${data.position}</p>
+                    ${data.content}
+                `;
+
+                // 更新桌面時間軸樣式
+                btnsTimeLine.forEach(btn => {
+                    if (btn.dataset.job === jobKey) {
+                        btn.classList.add('active', 'bg-blue-100');
+                    } else {
+                        btn.classList.remove('active', 'bg-blue-100');
+                    }
+                });
+
+                // 更新手機 Tabs 樣式
+                btnsMobileTabs.forEach(btn => {
+                    if (btn.dataset.job === jobKey) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
+                });
+                currentJob = jobKey;
+            }
+
+            btnsTimeLine.forEach(btn => btn.addEventListener('click', (e) => updateJobDetails(e.currentTarget.dataset.job)));
+            btnsMobileTabs.forEach(btn => btn.addEventListener('click', (e) => updateJobDetails(e.currentTarget.dataset.job)));
+
+            // 初始化時載入第一個職位內容
+            updateJobDetails('yuzhi');
+
+
+            // --- 3. 技能圖表初始化 ---
+            const ctx = document.getElementById('skillsChart').getContext('2d');
+            skillsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['數據分析 (Excel, R)', '專案管理', '營運規劃', 'Google Studio', '流程改善 (SOP)'],
+                    datasets: [{
+                        label: '技能熟練度',
+                        data: kpiData.peak.skills,
+                        backgroundColor: [
+                            'rgba(74, 144, 226, 0.7)',
+                            'rgba(34, 197, 94, 0.7)',
+                            'rgba(249, 115, 22, 0.7)',
+                            'rgba(234, 179, 8, 0.7)',
+                            'rgba(139, 92, 246, 0.7)'
+                        ],
+                        borderColor: [
+                             'rgba(74, 144, 226, 1)',
+                             'rgba(34, 197, 94, 1)',
+                            'rgba(249, 115, 22, 1)',
+                            'rgba(234, 179, 8, 1)',
+                            'rgba(139, 92, 246, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 700 // 新增動畫，數據變動時更流暢
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ` 熟練度: ${context.raw}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 100,
+                             ticks: {
+                                callback: function(value) {
+                                    return value + '%'
+                                }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                autoSkip: false,
+                                callback: function(value) {
+                                    const label = this.getLabelForValue(value);
+                                    if (label.length > 16) {
+                                        return label.substring(0, 16) + '...';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // --- 4. 數據篩選器邏輯 (動態變動數據) ---
+            function updateData(scenario) {
+                const data = kpiData[scenario];
+
+                // 更新 KPI 數字和顏色
+                document.getElementById('data-users').textContent = data.users;
+                document.getElementById('kpi-users').style.borderColor = data.usersColor;
+                document.getElementById('data-users').style.color = data.usersColor;
+
+                document.getElementById('data-satisfaction').textContent = data.satisfaction;
+                document.getElementById('kpi-satisfaction').style.borderColor = data.satisfactionColor;
+                document.getElementById('data-satisfaction').style.color = data.satisfactionColor;
+
+                document.getElementById('data-hours').textContent = data.hours;
+                document.getElementById('kpi-hours').style.borderColor = data.hoursColor;
+                document.getElementById('data-hours').style.color = data.hoursColor;
+
+                // 更新圖表數據
+                skillsChart.data.datasets[0].data = data.skills;
+                skillsChart.update();
+
+                // 更新按鈕樣式
+                btnsFilter.forEach(btn => {
+                    if (btn.dataset.scenario === scenario) {
+                        btn.classList.add('active-filter');
+                        btn.classList.remove('bg-gray-200');
+                        btn.classList.add('bg-[#4A90E2]', 'text-white');
+                    } else {
+                        btn.classList.remove('active-filter');
+                        btn.classList.add('bg-gray-200', 'text-gray-700');
+                        btn.classList.remove('bg-[#4A90E2]', 'text-white');
+                    }
+                });
+            }
+
+            btnsFilter.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    updateData(e.currentTarget.dataset.scenario);
+                });
+            });
+
+            // 初始載入 'peak' 情境數據
+            updateData('peak');
+        });
+    </script>
+</body>
+</html>
